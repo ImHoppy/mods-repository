@@ -15,6 +15,14 @@ const authenticate = (req, res, next) => {
     next();
 };
 
+const validateFolder = (req, res, next) => {
+    const folderName = req.params.folder;
+    if (!/^[a-zA-Z]+$/.test(folderName)) {
+        return res.status(400).json({ error: "Invalid folder name." });
+    }
+    next();
+};
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const folderPath = path.join(__dirname, "uploads", req.params.folder);
@@ -37,7 +45,7 @@ const upload = multer({
     },
 });
 
-app.post("/:folder/upload", authenticate, upload.array("files[]", 100), (req, res) => {
+app.post("/:folder/upload", validateFolder, authenticate, upload.array("files[]", 100), (req, res) => {
     if (!req.files || req.files.length === 0) {
         return res.status(400).json({ error: "No files uploaded" });
     }
@@ -49,7 +57,7 @@ app.post("/:folder/upload", authenticate, upload.array("files[]", 100), (req, re
     res.json({ message: "Files uploaded successfully", files: uploadedFiles });
 });
 
-app.get("/:folder/download", (req, res) => {
+app.get("/:folder/download", validateFolder, (req, res) => {
     const folderPath = path.join(__dirname, "uploads", req.params.folder);
 
     if (!fs.existsSync(folderPath)) {
@@ -76,7 +84,7 @@ app.get("/:folder/download", (req, res) => {
     });
 });
 
-app.get("/:folder/get/:file", (req, res) => {
+app.get("/:folder/get/:file", validateFolder, (req, res) => {
     const filePath = path.join(__dirname, "uploads", req.params.folder, req.params.file);
 
     if (!fs.existsSync(filePath)) {
@@ -86,7 +94,7 @@ app.get("/:folder/get/:file", (req, res) => {
     res.download(filePath);
 });
 
-app.get("/:folder/info", (req, res) => {
+app.get("/:folder/info", validateFolder, (req, res) => {
     const folderPath = path.join(__dirname, "uploads", req.params.folder);
 
     if (!fs.existsSync(folderPath)) {
@@ -107,7 +115,7 @@ app.get("/:folder/info", (req, res) => {
     res.json(files);
 });
 
-app.delete("/:folder/:file", authenticate, (req, res) => {
+app.delete("/:folder/:file,", validateFolder, authenticate, (req, res) => {
     const filePath = path.join(__dirname, "uploads", req.params.folder, req.params.file);
 
     if (!fs.existsSync(filePath)) {
@@ -118,7 +126,7 @@ app.delete("/:folder/:file", authenticate, (req, res) => {
     res.json({ message: "File deleted successfully" });
 });
 
-app.use('/:folder', express.static("public"));
+app.use('/:folder', validateFolder, express.static("public"));
 
 app.use((req, res, next) => {
     res.status(404).json({ error: "Not found" });
