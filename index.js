@@ -115,7 +115,7 @@ app.get("/:folder/info", validateFolder, (req, res) => {
     res.json(files);
 });
 
-app.delete("/:folder/:file,", validateFolder, authenticate, (req, res) => {
+app.delete("/:folder/:file", validateFolder, authenticate, (req, res) => {
     const filePath = path.join(__dirname, "uploads", req.params.folder, req.params.file);
 
     if (!fs.existsSync(filePath)) {
