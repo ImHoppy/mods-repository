@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link href="./output.css" rel="stylesheet">
     <title>File Manager</title>
     <style>
         .drag-overlay {
@@ -30,31 +30,32 @@
     </style>
 </head>
 
-<body class="bg-white dark:bg-gray-950 min-h-screen flex flex-col items-center py-10">
+<body class="bg-white dark:bg-gray-950 min-h-screen flex flex-col items-center py-10 space-y-4">
+
     <div class="dark:bg-gray-900 w-full max-w-lg bg-white rounded-lg shadow-md p-6">
-        <div id="error" class="hidden text-red-600 font-bold mb-4"></div>
-
-        <div class="mb-4">
-            <input type="password" id="password" placeholder="Enter password"
-                class="dark:text-white w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300" />
-        </div>
-
-        <div class="text-center mb-4">
+        <div class="text-center">
             <button id="download" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition">
-                Download
+                Download the ZIP
             </button>
         </div>
     </div>
 
-    <div id="drag-overlay" class="drag-overlay">
-        Drop file to upload
+    <div class="dark:bg-gray-900 w-full max-w-lg bg-white rounded-lg shadow-md p-6 space-y-4">
+        <div id="error" class="hidden text-red-600 font-bold"></div>
+    
+        <input type="password" id="password" placeholder="Enter password for manage files"
+            class="dark:text-white w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300" />
     </div>
 
     <div id="file-list-container"
-        class="dark:bg-gray-900 w-full max-w-lg bg-white rounded-lg shadow-md p-6 mt-6 hidden space-y-4">
+        class="dark:bg-gray-900 w-full max-w-lg bg-white rounded-lg shadow-md p-6 hidden space-y-4">
         <input type="search" placeholder="Search file" id="search-file"
             class="dark:text-white w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300" />
         <div id="file-list" class="space-y-2"></div>
+    </div>
+
+    <div id="drag-overlay" class="drag-overlay">
+        Drop file to upload
     </div>
 
     <script>
@@ -185,7 +186,7 @@
         });
 
         document.getElementById("download").addEventListener("click", () => {
-            window.location.href = `${apiURL}/${folderName}`;
+            window.location.href = `${apiURL}/${folderName}/download`;
         });
 
         document.addEventListener("DOMContentLoaded", () => {
