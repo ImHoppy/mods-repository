@@ -42,7 +42,7 @@
 
     <div class="dark:bg-gray-900 w-full max-w-lg bg-white rounded-lg shadow-md p-6 space-y-4">
         <div id="error" class="hidden text-red-600 font-bold"></div>
-    
+
         <input type="password" id="password" placeholder="Enter password for manage files"
             class="dark:text-white w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300" />
     </div>
@@ -94,9 +94,13 @@
             }
         };
 
+        const downloadFile = (fileName) => {
+            window.open(`${apiURL}/${folderName}/get/${fileName}`, '_blank');
+        }
+
         const renderFileElement = (file) => `
             <div
-                href="${apiURL}/${folderName}/${file.name}" target="_blank"
+                onclick="downloadFile('${file.name}')"
                 class=" bg-white outline outline-white/5 dark:bg-gray-950/50 hover:bg-gray-950 border-b border-gray-400 rounded px-4 py-2 cursor-pointer relative file-item"
                 data-name="${file.name}"
             >
