@@ -22,9 +22,10 @@ const storage = multer.diskStorage({
         cb(null, folderPath);
     },
     filename: (req, file, cb) => {
-        cb(null, file.originalname)
+        cb(null, file.originalname);
     },
 });
+
 const upload = multer({
     storage,
     fileFilter: (req, file, cb) => {
@@ -36,8 +37,17 @@ const upload = multer({
     },
 });
 
-app.post("/:folder/upload", authenticate, upload.single("file"), (req, res) => {
-    res.json({ message: "File uploaded successfully", file: req.file });
+app.post("/:folder/upload", authenticate, upload.array("files[]", 100), (req, res) => {
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ error: "No files uploaded" });
+    }
+    const uploadedFiles = req.files.map(file => ({
+        originalname: file.originalname,
+        path: file.path,
+        size: file.size,
+    }));
+
+    res.json({ message: "Files uploaded successfully", files: uploadedFiles });
 });
 
 app.get("/:folder", (req, res) => {
