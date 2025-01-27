@@ -108,9 +108,9 @@
 
         let files = []
         const searchFile = document.getElementById("search-file");
-        searchFile.addEventListener('change', (e) => {
+        searchFile.addEventListener('input', (e) => {
             const value = e.target.value;
-            const filteredFiles = files.filter(file => file.name.includes(value));
+            const filteredFiles = files.filter(file => file.name.toLowerCase().includes(value.toLowerCase()));
             fileList.innerHTML = filteredFiles.map(renderFileElement).join("");
         });
         const fetchFileInfo = async () => {

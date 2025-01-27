@@ -17,7 +17,7 @@ const authenticate = (req, res, next) => {
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const folderPath = path.join(__dirname, req.params.folder);
+        const folderPath = path.join(__dirname, "uploads", req.params.folder);
         fse.ensureDirSync(folderPath);
         cb(null, folderPath);
     },
@@ -49,8 +49,8 @@ app.post("/:folder/upload", authenticate, upload.array("files[]", 100), (req, re
     res.json({ message: "Files uploaded successfully", files: uploadedFiles });
 });
 
-app.get("/:folder", (req, res) => {
-    const folderPath = path.join(__dirname, req.params.folder);
+app.get("/:folder/download", (req, res) => {
+    const folderPath = path.join(__dirname, "uploads", req.params.folder);
 
     if (!fs.existsSync(folderPath)) {
         return res.status(404).json({ error: "Folder not found" });
@@ -77,7 +77,7 @@ app.get("/:folder", (req, res) => {
 });
 
 app.get("/:folder/get/:file", (req, res) => {
-    const filePath = path.join(__dirname, req.params.folder, req.params.file);
+    const filePath = path.join(__dirname, "uploads", req.params.folder, req.params.file);
 
     if (!fs.existsSync(filePath)) {
         return res.status(404).json({ error: "File not found" });
@@ -87,7 +87,7 @@ app.get("/:folder/get/:file", (req, res) => {
 });
 
 app.get("/:folder/info", (req, res) => {
-    const folderPath = path.join(__dirname, req.params.folder);
+    const folderPath = path.join(__dirname, "uploads", req.params.folder);
 
     if (!fs.existsSync(folderPath)) {
         return res.status(404).json({ error: "Folder not found" });
@@ -108,7 +108,7 @@ app.get("/:folder/info", (req, res) => {
 });
 
 app.delete("/:folder/:file", authenticate, (req, res) => {
-    const filePath = path.join(__dirname, req.params.folder, req.params.file);
+    const filePath = path.join(__dirname, "uploads", req.params.folder, req.params.file);
 
     if (!fs.existsSync(filePath)) {
         return res.status(404).json({ error: "File not found" });
@@ -127,4 +127,3 @@ app.use((req, res, next) => {
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
-
