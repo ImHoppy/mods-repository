@@ -42,8 +42,7 @@ app.post("/:folder/upload", authenticate, upload.array("files[]", 100), (req, re
         return res.status(400).json({ error: "No files uploaded" });
     }
     const uploadedFiles = req.files.map(file => ({
-        originalname: file.originalname,
-        path: file.path,
+        name: file.originalname,
         size: file.size,
     }));
 
